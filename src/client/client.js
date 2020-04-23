@@ -38,7 +38,7 @@ client.run = function(options) {
 
 		socket.on('disconnect', function() {
 			console.log("-> on disconnect: id -> ", id)
-			// term.dispose();
+			//term.dispose();
 		});
 
 		// for displaying the first command line
@@ -47,9 +47,28 @@ client.run = function(options) {
 
 };
 
+var ssh = getParameterByName("ssh");
+var ssh_port = getParameterByName("ssh_port") || 22;
+
+
 var e = document.getElementById("terminal");
+
 client.run({
 	parent : e,
-	remote : window.location.host
-    // remote : "http://localhost:3000"
-})
+	remote: location.protocol + '//' + window.location.host + '/?' + 
+	+ 'name=nodejs-ssh'
+	+ '&ssh=' + encodeURIComponent(ssh)
+	+ "&ssh_port=" + ssh_port
+	//remote : "http://localhost:3000"
+});
+
+
+function getParameterByName(name) {
+    var url = window.location.search;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}

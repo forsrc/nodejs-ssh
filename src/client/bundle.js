@@ -9201,11 +9201,31 @@ client.run = function(options) {
 	});
 
 };
-alert(window.location.host + ":" + window.location.protocol);
+
+var ssh = getParameterByName("ssh");
+var ssh_port = getParameterByName("ssh_port") || 22;
+
+
 var e = document.getElementById("terminal");
+
 client.run({
 	parent : e,
-	remote: window.location.host
+	remote: location.protocol + '//' + window.location.host + '/?' + 
+	+ 'name=nodejs-ssh'
+	+ '&ssh=' + encodeURIComponent(ssh)
+	+ "&ssh_port=" + ssh_port
 	//remote : "http://localhost:3000"
-})
+});
+
+
+function getParameterByName(name) {
+    var url = window.location.search;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
 },{"socket.io-client":36,"xterm":52}]},{},[54]);

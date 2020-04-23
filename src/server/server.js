@@ -33,14 +33,21 @@ server.run = function(options) {
 	io = io.listen(server, {log: false});
 
 	io.sockets.on('connection', function(socket) {
-		console.log(socket.handshake.query.ssh);
 		var id = socket.id;
+		console.log(id, " -> ", socket.handshake.query);
 		var buff = [];
 
 		var shell = process.env.NODEJS_SSH_SHELL || 'ssh';
 		var	opts = process.env.NODEJS_SSH_SHELL_ARGS || [];
 		if (shell === 'ssh') {
 			opts = process.env.NODEJS_SSH_SHELL_ARGS || ['localhost'];
+		}
+		
+		var ssh = socket.handshake.query.ssh;
+		if (ssh) {
+			var ssh_port = socket.handshake.query.ssh_port;
+			shell = 'ssh';
+			opts = [ssh, "-p", ssh_port];
 		}
 
 		var term = pty.spawn(shell, opts, {
