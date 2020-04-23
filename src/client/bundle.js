@@ -9163,7 +9163,7 @@ client.run = function(options) {
 
 	options = options || {};
 
-	var socket = io(options.remote || "http://localhost:3000", {
+	var socket = io(options.remote, {
 		path : '/ssh'
 	});
 	socket.on('connect', function() {
@@ -9201,11 +9201,11 @@ client.run = function(options) {
 	});
 
 };
-
+alert(window.location.host + ":" + window.location.protocol);
 var e = document.getElementById("terminal");
 client.run({
 	parent : e,
-	// remote: window.location.host + ":" + window.location.protocol
-	remote : "http://localhost:3000"
+	remote: window.location.host
+	//remote : "http://localhost:3000"
 })
 },{"socket.io-client":36,"xterm":52}]},{},[54]);

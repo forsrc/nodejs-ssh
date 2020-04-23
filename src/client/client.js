@@ -8,7 +8,7 @@ client.run = function(options) {
 
 	options = options || {};
 
-	var socket = io(options.remote || "http://localhost:3000", {
+	var socket = io(options.remote, {
 		path : '/ssh'
 	});
 	socket.on('connect', function() {
@@ -38,7 +38,7 @@ client.run = function(options) {
 
 		socket.on('disconnect', function() {
 			console.log("-> on disconnect: id -> ", id)
-			//term.dispose();
+			// term.dispose();
 		});
 
 		// for displaying the first command line
@@ -50,6 +50,6 @@ client.run = function(options) {
 var e = document.getElementById("terminal");
 client.run({
 	parent : e,
-	// remote: window.location.host + ":" + window.location.protocol
-	remote : "http://localhost:3000"
+	remote : window.location.host
+    // remote : "http://localhost:3000"
 })

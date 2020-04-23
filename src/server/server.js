@@ -33,6 +33,7 @@ server.run = function(options) {
 	io = io.listen(server, {log: false});
 
 	io.sockets.on('connection', function(socket) {
+		console.log(socket.handshake.query.ssh);
 		var id = socket.id;
 		var buff = [];
 
