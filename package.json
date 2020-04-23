@@ -5,11 +5,12 @@
   "scripts": {
     "start": "node index.js",
     "watch": "watchify   src/client/client.js -o src/client/bundle.js -v",
-    "build": "browserify src/client/client.js > src/client/bundle.js"
+    "build": "browserify src/client/client.js >  src/client/bundle.js"
   },
   "dependencies": {
     "browserify": "^16.5.1",
     "express": "~4.16.1",
+    "node-gyp": "^6.1.0",
     "node-pty": "^0.9.0",
     "require": "^2.4.20",
     "socket.io": "^2.3.0",
