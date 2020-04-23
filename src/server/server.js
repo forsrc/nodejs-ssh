@@ -36,11 +36,13 @@ server.run = function(options) {
 		var id = socket.id;
 		var buff = [];
 
-		var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
-		shell = "ssh";
-		var ssh = process.env.SSH || 'forsrc@localhost';
+		var shell = process.env.NODEJS_SSH_SHELL || 'ssh';
+		var	opts = process.env.NODEJS_SSH_SHELL_ARGS || [];
+		if (shell === 'ssh') {
+			opts = process.env.NODEJS_SSH_SHELL_ARGS || ['localhost'];
+		}
 
-		var term = pty.spawn(shell, [ssh], {
+		var term = pty.spawn(shell, opts, {
 		  name: 'xterm-color',
 		  cols: 80,
 		  rows: 30,
