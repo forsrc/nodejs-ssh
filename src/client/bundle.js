@@ -9201,7 +9201,10 @@ client.run = function(options) {
 };
 
 var ssh = getParameterByName("ssh");
-var ssh_port = getParameterByName("ssh_port") || 22;
+var ssh_port = getParameterByName("ssh_port");
+ 
+document.title = ssh ? 'ssh ' + ssh  + ' -p ' + (ssh_port || 22) : 'nodejs-ssh localhost';
+
 
 
 var e = document.getElementById("terminal");
@@ -9210,8 +9213,8 @@ client.run({
 	parent : e,
 	remote: location.protocol + '//' + window.location.host + '/?' + 
 	+ 'name=nodejs-ssh'
-	+ '&ssh=' + encodeURIComponent(ssh)
-	+ "&ssh_port=" + ssh_port
+	+ (ssh ? '&ssh=' + encodeURIComponent(ssh) : '')
+	+ (ssh_port ? "&ssh_port=" + ssh_port : '')
 	//remote : "http://localhost:3000"
 });
 
