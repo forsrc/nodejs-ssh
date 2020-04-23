@@ -1,0 +1,26 @@
+{
+  "name": "nodejs-ssh",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "watch": "watchify   src/client/client.js -o src/client/bundle.js -v",
+    "build": "browserify src/client/client.js > src/client/bundle.js"
+  },
+  "dependencies": {
+    "browserify": "^16.5.1",
+    "express": "~4.16.1",
+    "node-pty": "^0.9.0",
+    "require": "^2.4.20",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "ssh2": "^0.8.9",
+    "term.js": "0.0.7",
+    "uglifyjs": "^2.4.11",
+    "watchify": "^3.11.1",
+    "webpack": "^4.43.0",
+    "xterm": "^4.5.0",
+    "xterm-addon-attach": "^0.5.0",
+    "xterm-js-shell": "^1.1.3"
+  }
+}
