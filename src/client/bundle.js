@@ -9196,8 +9196,6 @@ client.run = function(options) {
 			//term.dispose();
 		});
 
-		// for displaying the first command line
-		socket.emit('data', '\n');
 	});
 
 };

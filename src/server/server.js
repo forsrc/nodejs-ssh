@@ -33,6 +33,7 @@ server.run = function(options) {
 	io = io.listen(server, {log: false});
 
 	io.sockets.on('connection', function(socket) {
+		var isOK = false;
 		var id = socket.id;
 		console.log(id, " -> ", socket.handshake.query);
 		var buff = [];
@@ -48,6 +49,7 @@ server.run = function(options) {
 			var ssh_port = socket.handshake.query.ssh_port;
 			shell = 'ssh';
 			opts = [ssh, "-p", ssh_port];
+			console.log(id, " -> ", opts);
 		}
 
 		var term = pty.spawn(shell, opts, {
@@ -79,7 +81,7 @@ server.run = function(options) {
 
 		// handle incoming data (client -> server)
 		socket.on('data', function(data) {
-			console.log(new Date().toISOString(), "-> on data: ")
+			//console.log(new Date().toISOString(), "-> on data: ", data)
 			term.write(data);
 		});
 
