@@ -31,7 +31,7 @@ server.run = function(options) {
 
 	// let socket.io handle sockets
 	io = io.listen(server, {log: false});
-
+	process.stdin.setRawMode(true);
 	io.sockets.on('connection', function(socket) {
 
 		var id = socket.id;
@@ -63,7 +63,7 @@ server.run = function(options) {
 		var cmd = "";
 		term.on('data', function(data) {
 			if (data.indexOf('\r') != -1) {
-				console.log(new Date().toISOString(), "-> on term: ", cmd);
+				console.log(new Date().toISOString(), id, " ->  on term: ", cmd);
 				cmd = '';
 			} else {
 				cmd += data;
@@ -71,13 +71,14 @@ server.run = function(options) {
 
 			if (socket) socket.emit('data', data);
 		});
-		
+
+
 		term.on('exit', function() {
-			console.log(new Date().toISOString(), "-> on term exit:  id -> ", id);
+			console.log(new Date().toISOString(), " -> on term exit:  id -> ", id);
 			if (socket) socket.disconnect();
 		});
 
-		console.log(new Date().toISOString(), "-> on connection: id -> ", id);
+		console.log(new Date().toISOString(), " -> on connection: id -> ", id);
 
 		// handle incoming data (client -> server)
 		socket.on('data', function(data) {
@@ -85,13 +86,14 @@ server.run = function(options) {
 			term.write(data);
 		});
 
+
 		// handle connection lost
 		socket.on('disconnect', function() {
-			console.log(new Date().toISOString(), "-> on disconnect: id -> ", id);
+			console.log(new Date().toISOString(), " -> on disconnect: id -> ", id);
 			socket = null;
             try {
                 term.kill();
-                console.log(new Date().toISOString(), "-> on term.kill:  id -> ", id);
+                console.log(new Date().toISOString(), " -> on term.kill:  id -> ", id);
 		    } catch (err) {
 			    console.error(err);
             }
