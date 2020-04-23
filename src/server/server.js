@@ -33,17 +33,17 @@ server.run = function(options) {
 	io = io.listen(server, {log: false});
 
 	io.sockets.on('connection', function(socket) {
-		var isOK = false;
+
 		var id = socket.id;
 		console.log(id, " -> ", socket.handshake.query);
 		var buff = [];
 
 		var shell = process.env.NODEJS_SSH_SHELL || 'ssh';
-		var	opts = process.env.NODEJS_SSH_SHELL_ARGS || [];
+		var opts = process.env.NODEJS_SSH_SHELL_ARGS ? process.env.NODEJS_SSH_SHELL_ARGS.split(",") : [];
 		if (shell === 'ssh') {
-			opts = process.env.NODEJS_SSH_SHELL_ARGS || ['localhost'];
+			opts = opts || ['localhost'];
 		}
-		
+
 		var ssh = socket.handshake.query.ssh;
 		if (ssh && ssh != "null") {
 			var ssh_port = socket.handshake.query.ssh_port || 22;
