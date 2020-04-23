@@ -1,5 +1,5 @@
 var Terminal = require('xterm').Terminal;
-// var AttachAddon = require('xterm-addon-attach').AttachAddon;
+var FitAddon = require('xterm-addon-fit').FitAddon;
 var io = require('socket.io-client');
 
 var client = {};
@@ -14,10 +14,17 @@ client.run = function(options) {
 	socket.on('connect', function() {
 		var term = new Terminal({
 			cols : 120,
-			rows : 60,
+			rows : 50,
 			useStyle : true,
-			screenKeys : true
+			screenKeys : true,
+			cursorBlink: true,
+			cursorStyle: "underline",
+			scrollback: 1000,
+			tabStopWidth: 4
 		});
+		var fitAddon = new FitAddon();
+		term.loadAddon(fitAddon);
+
 		var id = socket.id;
 		console.log("-> on connect: id -> ", id)
 
@@ -26,9 +33,7 @@ client.run = function(options) {
 		});
 
 		term.open(options.parent || document.body);
-
-		// var attachAddon = new AttachAddon(socket);
-		// term.loadAddon(attachAddon);
+		fitAddon.fit();
 
 		term.onData(function(data) {
 			socket.emit('data', data);
@@ -40,10 +45,21 @@ client.run = function(options) {
 			console.log("-> on disconnect: id -> ", id)
 			//term.dispose();
 		});
+		
+		window.addEventListener('resize', () => {
+			fitAddon.fit();
+			term.scrollToBottom();
+		});
+		
+		document.body.onkeydown = function (event) {
+			term.scrollToBottom();
+		}
 
 	});
 
 };
+
+
 
 var ssh = getParameterByName("ssh");
 var ssh_port = getParameterByName("ssh_port");

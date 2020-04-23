@@ -35,13 +35,13 @@ server.run = function(options) {
 	io.sockets.on('connection', function(socket) {
 
 		var id = socket.id;
-		console.log(id, " -> ", socket.handshake.query);
+		console.log(new Date().toISOString(), id, " -> ", socket.handshake.query);
 		var buff = [];
 
 		var shell = process.env.NODEJS_SSH_SHELL || 'ssh';
 		var opts = process.env.NODEJS_SSH_SHELL_ARGS ? process.env.NODEJS_SSH_SHELL_ARGS.split(",") : [];
-		if (shell === 'ssh') {
-			opts = opts || ['localhost'];
+		if (shell === 'ssh' && !process.env.NODEJS_SSH_SHELL_ARGS) {
+			opts = ['localhost'];
 		}
 
 		var ssh = socket.handshake.query.ssh;
@@ -51,7 +51,7 @@ server.run = function(options) {
 			opts = [ssh, "-p", ssh_port];
 			console.log(id, " -> ", opts);
 		}
-
+        console.log(new Date().toISOString(), id, " -> ", shell, opts);
 		var term = pty.spawn(shell, opts, {
 		  name: 'xterm-color',
 		  cols: 80,
