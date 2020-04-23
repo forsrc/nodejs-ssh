@@ -45,7 +45,7 @@ server.run = function(options) {
 		}
 		
 		var ssh = socket.handshake.query.ssh;
-		if (ssh) {
+		if (ssh && ssh != "null") {
 			var ssh_port = socket.handshake.query.ssh_port;
 			shell = 'ssh';
 			opts = [ssh, "-p", ssh_port];
