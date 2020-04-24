@@ -36,8 +36,8 @@ ioserver.handle = function(socket) {
 	console.log(new Date().toISOString(), id, " -> ", shell, opts);
 	var term = pty.spawn(shell, opts, {
 		name: 'xterm-color',
-		cols: 80,
-		rows: 30,
+		cols: 200,
+		rows: 50,
 		cwd: process.env.HOME,
 		env: process.env
 	});
