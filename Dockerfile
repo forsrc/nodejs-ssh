@@ -28,4 +28,6 @@ RUN apt-get clean
 WORKDIR /home/$USER
 USER $USER
 
+WORKDIR   /nodejs-ssh
+
 CMD [ "node", "index.js" ]
