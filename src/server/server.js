@@ -31,7 +31,7 @@ server.run = function(options) {
 
 	// let socket.io handle sockets
 	io = io.listen(server, {log: false});
-	process.stdin.setRawMode(true);
+	//process.stdin.setRawMode(true);
 	io.sockets.on('connection', function(socket) {
 
 		var id = socket.id;
