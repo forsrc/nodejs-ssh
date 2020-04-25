@@ -9196,6 +9196,11 @@ client.run = function(options) {
 		term.onData(function(data) {
 			socket.emit('data', data);
 		});
+		
+		term.onResize(function(evt) {
+			console.log({cols: evt.cols, rows: evt.rows});
+			socket.emit('resize', {cols: evt.cols, rows: evt.rows});
+		});
 
 		// term.write('hello world\r\n');
 
@@ -9211,8 +9216,6 @@ client.run = function(options) {
 		
 		document.body.onkeydown = function (event) {
 			term.scrollToBottom();
-			e = document.getElementById("terminal");
-			e.scrollTop = e.scrollHeight;
 		}
 
 	});

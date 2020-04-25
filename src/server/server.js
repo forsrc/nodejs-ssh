@@ -36,7 +36,7 @@ ioserver.handle = function(socket) {
 	console.log(new Date().toISOString(), id, " -> ", shell, opts);
 	var term = pty.spawn(shell, opts, {
 		name: 'xterm-color',
-		cols: 200,
+		cols: 120,
 		rows: 50,
 		cwd: process.env.HOME,
 		env: process.env
@@ -78,6 +78,10 @@ ioserver.handle = function(socket) {
 		} catch (err) {
 			console.error(err);
 		}
+	});
+	socket.on('resize', function(data) {
+		console.log(new Date().toISOString(), " -> on resize:     id -> ", id, data);
+		term.resize(data.cols, data.rows);
 	});
 }
 
