@@ -9239,13 +9239,15 @@ client.run = function(options) {
 			term.scrollToBottom();
 		}
 
-
+		if (encoding) {
+			socket.emit('encoding', encoding);
+		}
 	});
 
 };
 
 
-
+var encoding = getParameterByName("encoding");
 var ssh = getParameterByName("ssh");
 var ssh_port = getParameterByName("ssh_port");
 var ssh_port = getParameterByName("ssh_port");

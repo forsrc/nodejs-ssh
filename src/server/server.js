@@ -17,6 +17,7 @@ ioserver.run = function(server) {
 };
 
 ioserver.handle = function(socket) {
+	console.log("===============================================");
 	var id = socket.id;
 	console.log(new Date().toISOString(), id, " -> ", socket.handshake.query);
 	console.log(new Date().toISOString(), id, " -> process.env.NODEJS_SSH_SHELL", process.env.NODEJS_SSH_SHELL);
@@ -97,10 +98,18 @@ ioserver.handle = function(socket) {
 			term.kill();
 			console.log(new Date().toISOString(), " -> process.exit:  id -> ", id);
 		} catch (err) {
-			console.error(err);
+			console.error(new Date().toISOString(), id, " -> proc exit: ", err);
 		}
 	});
 
+	socket.on('encoding', function(encoding) {	
+		try {
+			console.log(new Date().toISOString(), id, " -> encoding: ", encoding);
+			term.setEncoding(encoding);
+		} catch (err) {
+			console.error(new Date().toISOString(), id, " ->  encoding: ", err);
+		}
+	});
 	setTimeout(function() {if (socket) socket.emit('init', "ok"); }, 1000);
 }
 
