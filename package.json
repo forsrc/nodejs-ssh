@@ -23,6 +23,7 @@
     "xterm": "^4.5.0",
     "xterm-addon-attach": "^0.5.0",
     "xterm-addon-fit": "^0.3.0",
+    "xterm-addon-web-links": "^0.3.0",
     "xterm-js-shell": "^1.1.3"
   }
 }

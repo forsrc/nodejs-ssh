@@ -81,8 +81,24 @@ ioserver.handle = function(socket) {
 	});
 	socket.on('resize', function(data) {
 		console.log(new Date().toISOString(), " -> on resize:     id -> ", id, data);
-		term.resize(data.cols, data.rows);
+		if (term) {
+			try {
+				term.resize(data.cols, data.rows);
+			} catch (err) {
+				console.error(new Date().toISOString(), id, " ->  on term: ", err);
+			}
+		}
 	});
+	process.on('exit', function() {
+		try {
+			term.kill();
+			console.log(new Date().toISOString(), " -> process.exit:  id -> ", id);
+		} catch (err) {
+			console.error(err);
+		}
+	});
+
+	setTimeout(function() {if (socket) socket.emit('init', "ok"); }, 1000);
 }
 
 

@@ -1,5 +1,6 @@
 var Terminal = require('xterm').Terminal;
 var FitAddon = require('xterm-addon-fit').FitAddon;
+var WebLinksAddon = require('xterm-addon-web-links').WebLinksAddon;
 var io = require('socket.io-client');
 
 var client = {};
@@ -12,31 +13,37 @@ client.run = function(options) {
 		path : '/ssh'
 	});
 	socket.on('connect', function() {
+		connect.style.color = "green";
+		connect.isConnect = true;
 		var term = new Terminal({
-			cols : 120,
-			rows : 50,
+			cols : cols || 120,
+			rows : rows || 50,
 			useStyle : true,
 			screenKeys : true,
 			cursorBlink: true,
 			cursorStyle: "underline",
-			scrollback: 1000,
 			tabStopWidth: 4
 		});
+
 		var fitAddon = new FitAddon();
 		term.loadAddon(fitAddon);
+		term.loadAddon(new WebLinksAddon());
+
+		term.open(options.parent || document.body);
+		fitAddon.fit();
+
 
 		var id = socket.id;
 		console.log("-> on connect: id -> ", id)
 
 		socket.on('data', function(data) {
+			if (connect.isConnect) connect.style.color = "yellow";
 			term.write(data);
+			if (connect.isConnect) setTimeout(function(){connect.style.color = "green";}, 1000);
 		});
 
-		term.open(options.parent || document.body);
-		fitAddon.fit();
-
 		term.onData(function(data) {
-			socket.emit('data', data);
+			socket.emit('data', data);	
 		});
 		
 		term.onResize(function(evt) {
@@ -47,8 +54,15 @@ client.run = function(options) {
 		// term.write('hello world\r\n');
 
 		socket.on('disconnect', function() {
-			console.log("-> on disconnect: id -> ", id)
+			connect.isConnect = false;
+			connect.style.color = "red";
+			setTimeout(function(){connect.style.color = "red";}, 1000);
+			console.log("-> on disconnect: id -> ", id);
 			//term.dispose();
+		});
+
+		socket.on('init', function(data) {
+			if (data == 'ok') socket.emit('resize', {cols: cols, rows: rows});
 		});
 		
 		window.addEventListener('resize', () => {
@@ -60,6 +74,7 @@ client.run = function(options) {
 			term.scrollToBottom();
 		}
 
+
 	});
 
 };
@@ -68,15 +83,21 @@ client.run = function(options) {
 
 var ssh = getParameterByName("ssh");
 var ssh_port = getParameterByName("ssh_port");
- 
+var ssh_port = getParameterByName("ssh_port");
+var cols = getParameterByName("cols") || 120;
+var rows = getParameterByName("rows") || 50;
+cols = parseInt(cols);
+rows = parseInt(rows);
+
 document.title = ssh ? 'ssh ' + ssh  + ' -p ' + (ssh_port || 22) : 'nodejs-ssh localhost';
 
 
 
-var e = document.getElementById("terminal");
+var terminal = document.getElementById("terminal");
+var connect = document.getElementById("connect");
 
 client.run({
-	parent : e,
+	parent : terminal,
 	remote: location.protocol + '//' + window.location.host + '/?' + 
 	+ 'name=nodejs-ssh'
 	+ (ssh ? '&ssh=' + encodeURIComponent(ssh) : '')
@@ -86,11 +107,11 @@ client.run({
 
 
 function getParameterByName(name) {
-    var url = window.location.search;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	var url = window.location.search;
+	name = name.replace(/[\[\]]/g, '\\$&');
+	var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+	results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
