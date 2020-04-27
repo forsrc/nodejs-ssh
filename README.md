@@ -14,4 +14,6 @@ sudo docker run -it -p 3000:3000 --rm --name nodejs-ssh -e NODEJS_SSH_SHELL=ssh 
 
 https://localhost:3000/
 
+https://127.0.0.1:3000/?cols=120&rows=50
+
 https://localhost:3000/?ssh=forsrc@172.17.0.2&ssh_port=22
