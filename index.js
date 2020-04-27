@@ -19,6 +19,10 @@ app.get('/' , function(req, res){
 	res.sendFile(path.resolve(__dirname + '/src/client/index.html'));
 });
 
+app.get('/healthz' , function(req, res){
+	res.send("ok");
+});
+
 app.use(terminal.middleware());
 
 //var server = http.createServer(app);
