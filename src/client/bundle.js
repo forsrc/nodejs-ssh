@@ -9226,6 +9226,10 @@ client.run = function(options) {
 			if (data == 'ok') socket.emit('resize', {cols: cols, rows: rows});
 		});
 		
+		socket.on('shell', function(data) {
+			shell.innerText = data;
+		});
+		
 		window.addEventListener('resize', () => {
 			fitAddon.fit();
 			term.scrollToBottom();
@@ -9256,6 +9260,7 @@ document.title = ssh ? 'ssh ' + ssh  + ' -p ' + (ssh_port || 22) : 'nodejs-ssh l
 
 var terminal = document.getElementById("terminal");
 var connect = document.getElementById("connect");
+var shell = document.getElementById("shell");
 
 client.run({
 	parent : terminal,

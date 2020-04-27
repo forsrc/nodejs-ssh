@@ -19,9 +19,10 @@ ioserver.run = function(server) {
 ioserver.handle = function(socket) {
 	var id = socket.id;
 	console.log(new Date().toISOString(), id, " -> ", socket.handshake.query);
-
+	console.log(new Date().toISOString(), id, " -> process.env.NODEJS_SSH_SHELL", process.env.NODEJS_SSH_SHELL);
+	console.log(new Date().toISOString(), id, " -> process.env.NODEJS_SSH_SHELL_ARGS", process.env.NODEJS_SSH_SHELL_ARGS);
 	var shell = process.env.NODEJS_SSH_SHELL || 'ssh';
-	var opts = process.env.NODEJS_SSH_SHELL_ARGS ? process.env.NODEJS_SSH_SHELL_ARGS.split(",") : [];
+	var opts = process.env.NODEJS_SSH_SHELL_ARGS ? process.env.NODEJS_SSH_SHELL_ARGS.split(",").map(function (val) { return val.trim(); }) : [];
 	if (shell === 'ssh' && !process.env.NODEJS_SSH_SHELL_ARGS) {
 		opts = ['localhost'];
 	}
@@ -34,6 +35,8 @@ ioserver.handle = function(socket) {
 		console.log(new Date().toISOString(), id, " -> ", opts);
 	}
 	console.log(new Date().toISOString(), id, " -> ", shell, opts);
+	if (socket) socket.emit('shell', process.env.NODEJS_SSH_SHELL + ' ' + process.env.NODEJS_SSH_SHELL_ARGS);
+
 	var term = pty.spawn(shell, opts, {
 		name: 'xterm-color',
 		cols: 120,
