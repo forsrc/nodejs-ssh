@@ -66,7 +66,7 @@ client.run = function(options) {
 		});
 		
 		socket.on('shell', function(data) {
-			shell.innerText = data;
+			shell.innerText = data.shell + (data.args ? "  " + (data.args + "").replace(',', ' ') : "");
 		});
 		
 		window.addEventListener('resize', () => {
@@ -90,6 +90,7 @@ var encoding = getParameterByName("encoding");
 var ssh = getParameterByName("ssh");
 var ssh_port = getParameterByName("ssh_port");
 var ssh_port = getParameterByName("ssh_port");
+var shell_args = getParameterByName("shell_args");
 var cols = getParameterByName("cols") || 120;
 var rows = getParameterByName("rows") || 50;
 cols = parseInt(cols);
@@ -109,6 +110,7 @@ client.run({
 	+ 'name=nodejs-ssh'
 	+ (ssh ? '&ssh=' + encodeURIComponent(ssh) : '')
 	+ (ssh_port ? "&ssh_port=" + ssh_port : '')
+	+ (shell_args ? "&shell_args=" + encodeURIComponent(shell_args) : "")
 	//remote : "http://localhost:3000"
 });
 

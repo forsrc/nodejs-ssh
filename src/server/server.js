@@ -35,8 +35,18 @@ ioserver.handle = function(socket) {
 		opts = [ssh, "-p", ssh_port];
 		console.log(new Date().toISOString(), id, " -> ", opts);
 	}
+
+	var shell_args = socket.handshake.query.shell_args
+	if(shell_args) {
+		try {
+			opts = shell_args.split(",").map(function (val) { return val.trim(); })
+		} catch(err) {
+			console.err(new Date().toISOString(), id, " -> ", err);
+		}
+	}
+
 	console.log(new Date().toISOString(), id, " -> ", shell, opts);
-	if (socket) socket.emit('shell', process.env.NODEJS_SSH_SHELL + ' ' + process.env.NODEJS_SSH_SHELL_ARGS);
+	if (socket) socket.emit('shell', {shell: process.env.NODEJS_SSH_SHELL, args: opts});
 
 	var term = pty.spawn(shell, opts, {
 		name: 'xterm-color',
