@@ -19,6 +19,7 @@ ioserver.run = function(server) {
 ioserver.handle = function(socket) {
 	console.log("===============================================");
 	var id = socket.id;
+	console.log(new Date().toISOString(), " -> on connection: id -> ", id);
 	console.log(new Date().toISOString(), id, " -> ", socket.handshake.query);
 	console.log(new Date().toISOString(), id, " -> process.env.NODEJS_SSH_SHELL", process.env.NODEJS_SSH_SHELL);
 	console.log(new Date().toISOString(), id, " -> process.env.NODEJS_SSH_SHELL_ARGS", process.env.NODEJS_SSH_SHELL_ARGS);
@@ -59,7 +60,7 @@ ioserver.handle = function(socket) {
 	var cmd = "";
 	term.on('data', function(data) {
 		if (data.indexOf('\r') != -1) {
-			console.log(new Date().toISOString(), id, " ->  on term: ", cmd);
+			console.log(new Date().toISOString(), id, " ->  on term: ", cmd + data);
 			cmd = '';
 		} else {
 			cmd += data;
@@ -73,8 +74,6 @@ ioserver.handle = function(socket) {
 		console.log(new Date().toISOString(), " -> on term exit:  id -> ", id);
 		if (socket) socket.disconnect();
 	});
-
-	console.log(new Date().toISOString(), " -> on connection: id -> ", id);
 
 	// handle incoming data (client -> server)
 	socket.on('data', function(data) {
